@@ -1,0 +1,33 @@
+sfc - scans system files and reveals changed ones
+sigverif - checks drivers
+driveryquery - checks drivers
+ping 8.8.8.8 and google.com to determine state of network connectivity
+ipconfig /release; ipconfig /renew; ipconfig /flushdns
+tasklist and taskkill
+check catroot (may not be reliable but worth a try)
+whoami /all
+check env vars with set
+reg query HKLM /s /d /f "C:\* *.exe" | find /I "C:\" | find /V """" - current regged exes
+net user /domain
+net accounts and net accounts /domain - password policy
+net localgroup administrators (/domain) - print administrators
+type %WINDIR%\System32\drivers\etc\hosts - check hosts file
+make sure %COMSPEC% is set to cmd.exe
+c:\windows\system32\gathernetworkinfo.vbs (win7) - prints network info
+qwinsta - displays info about processes
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f - enables remote desktop
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fAllowToGetHelp /t REG_DWORD /d 1 /f - enables remote assistance
+check auto start directories (check system version with 'ver')
+	NT 6.0-6.1: %SystemDrive%\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\
+	NT 5.0-5.2: %SystemDrive%\Documents And Settings\All Users\Start Menu\Programs\StartUp\
+	9x: %SystemDrive%\wmiOWS\Start Menu\Programs\StartUp\
+	NT 3.5-3.51, 4.0: %SystemDrive%\WINNT\Profiles\All Users\Start Menu\Programs\StartUp\
+check downloads directory for msiexec.exe
+wmic - gold mine of functions, from serials, account info, shares, startup, and more
+reg save - back up registry before beginning
+wmic product - uninstall software (!!!)
+pkgmgr - lets you install windows pagkages
+use xcopy/robocopy to copy files around
+
+SAIC stuff is in the pdf
+http://www.highschoolcdc.com/html/security_tips.html

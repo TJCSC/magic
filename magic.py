@@ -5,8 +5,8 @@ import urllib, zipfile, subprocess
 VERSION = 0.1
 regReboot = False
 verbose = False
-# Todo: add system file checking against hashes, check process list against default, check program files, convert to standalone
-# executable, download all hashes from the internet
+# Todo: add system file checking against hashes, check process list against default, check program files, download all hashes from the internet
+# 	convert to standalone executable when finished
 
 try:
     from _winreg import *
@@ -35,7 +35,13 @@ parser.add_argument('-i',  metavar='file', type=str, nargs='*', help='install wi
 parser.add_argument('-r', help='reboots the system', action='store_true')
 parser.add_argument('-V', action='store_true', help='prints version information')
 parser.add_argument('-v', action='store_true', help='show verbose output')
-args = parser.parse_args()
+args= parser.parse_args()
+
+#check for no arguments, and if there are none, print help
+#later this might be changed to do some default operations
+from sys import argv
+if len(argv)<2:
+	parser.print_help()
 
 if args.V: # Print version info
     print "magic.py: version %s | Written by Cyrus Malekpour" % (str(VERSION))

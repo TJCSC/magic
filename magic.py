@@ -125,7 +125,7 @@ def adminshares():
 
 def closeport(port):
   print('Closing down port #' + port + '...')
-  os.system('netsh firewall delete portopening ALL ' + somePort)
+  os.system('netsh firewall delete portopening ALL %d' % port)
 
 def nullsessions():
   print('Disabling null sessions from the registry...')

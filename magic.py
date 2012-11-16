@@ -20,48 +20,6 @@ except:
     #print 'magic is not currently running on a Windows system, aborting.'
     #exit()
 
-# START LOGGING SET UP ==========================================================
-
-# set up logging to a main full file
-logging.basicConfig(level=logging.DEBUG,
-					format='%(asctime)s %(levelname)-8s %(message)s',
-					datefmt='%m-%d %H:%M',
-					filename='magic-%(asctime)s-full.log',
-					filemode='w')
-
-# define a Handler which writes INFO messages or higher to an output file
-output = logging.FileHandler('magic-output.log')
-output.setLevel(logging.INFO)
-# set a format which is simpler for console use
-formatter = logging.Formatter('%(levelname)-8s %(message)s')
-# tell the handler to use this format
-output.setFormatter(formatter)
-# add the handler to the root logger
-logging.getLogger('').addHandler(output)
-
-# define a Handler which writes INFO messages or higher to the sys.stderr
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-# set a format which is simpler for console use
-formatter = logging.Formatter('%(levelname)-8s %(message)s')
-# tell the handler to use this format
-console.setFormatter(formatter)
-# add the handler to the root logger
-logging.getLogger('').addHandler(console)
-
-# READ THIS AND IMPLEMENT IT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-#to log something:
-#logging.debug('this will be logged')
-#logging.critical('this will be very importantly logged')
-#use different levels for different things:
-#DEBUG - debug message
-#INFO - info message
-#WARNING - warn message
-#ERROR - error message
-#CRITICAL - critical message
-
-
-# END LOGGING SET UP ==========================================================
 
 # START FUNCTIONS =============================================================
 
@@ -203,6 +161,10 @@ class silentArgParse(argparse.ArgumentParser):
 	#	exit()
 	pass
 
+# END FUNCTIONS ===============================================================
+
+# START READ ARGS =============================================================
+
 parser = silentArgParse(description='Automates common Windows security fixes. magic was written by the TJCSCC', prog='magic') #, prefix_chars='-/') # prefix_chars doesn't work, as far as I can tell
 parser.add_argument('-d', '--default', 			help='perform all default recommended fixes [put equivalent files]', action='store_true')
 parser.add_argument('-V', '--version', 			action='store_true', help='prints version information')
@@ -221,6 +183,53 @@ parser.add_argument('-fs', '--ftp-smtp',		metavar='on/off', choices=['on', 'off'
 parser.add_argument('-ip', '--install-patches',         metavar='file', type=str, nargs='*', help='install windows patches')
 parser.add_argument('-r', '--reboot',			help='reboots the system', action='store_true')
 args= parser.parse_args()
+
+# END READ ARGS =================================================================
+
+# START LOGGING SET UP ==========================================================
+
+# set up logging to a main full file
+logging.basicConfig(level=logging.DEBUG,
+					format='%(asctime)s %(levelname)-8s %(message)s',
+					datefmt='%m-%d %H:%M',
+					filename='magic-'+time.strftime("%Y-%m-%d,%H:%M:%S")+'-full.log',
+					filemode='w')
+
+# define a Handler which writes INFO messages or higher to an output file
+output = logging.FileHandler('magic-output.log')
+output.setLevel(logging.INFO)
+# set a format which is simpler for console use
+formatter = logging.Formatter('%(levelname)-8s %(message)s')
+# tell the handler to use this format
+output.setFormatter(formatter)
+# add the handler to the root logger
+logging.getLogger('').addHandler(output)
+
+# define a Handler which writes INFO messages or higher to the sys.stderr
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+# set a format which is simpler for console use
+formatter = logging.Formatter('%(levelname)-8s %(message)s')
+# tell the handler to use this format
+console.setFormatter(formatter)
+# add the handler to the root logger
+logging.getLogger('').addHandler(console)
+
+# READ THIS AND IMPLEMENT IT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#to log something:
+#logging.debug('this will be logged')
+#logging.critical('this will be very importantly logged')
+#use different levels for different things:
+#DEBUG - debug message
+#INFO - info message
+#WARNING - warn message
+#ERROR - error message
+#CRITICAL - critical message
+
+
+# END LOGGING SET UP ==========================================================
+
+# START PROCESS ARGS ==========================================================
 
 # Check for having no arguments, and if there are none, print help
 # later this might be changed to do some default operations
@@ -303,3 +312,5 @@ if args.install_patches:
 # Reboot the system (always last)
 if args.reboot or regReboot == True:
     reboot()
+
+# END PROCESS ARGS ==========================================================

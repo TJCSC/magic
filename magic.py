@@ -22,6 +22,8 @@ except:
     #print 'magic is not currently running on a Windows system, aborting.'
     #exit()
 
+# START LOGGING SET UP ==========================================================
+
 # set up logging to a main full file
 logging.basicConfig(level=logging.DEBUG,
 					format='%(asctime)s %(levelname)-8s %(message)s',

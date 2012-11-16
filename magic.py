@@ -12,8 +12,6 @@ import logging
 
 VERSION = 0.1
 regReboot = False
-# Todo: add system file checking against hashes, check process list against default, check program files, download all hashes from the internet
-# 	convert to standalone executable when finished
 
 try:
     from _winreg import *

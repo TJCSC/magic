@@ -22,8 +22,6 @@ except:
     #print 'magic is not currently running on a Windows system, aborting.'
     #exit()
 
-# START LOGGING SET UP ========================================================
-
 # set up logging to a main full file
 logging.basicConfig(level=logging.DEBUG,
 					format='%(asctime)s %(levelname)-8s %(message)s',
@@ -53,8 +51,8 @@ logging.getLogger('').addHandler(console)
 
 # READ THIS AND IMPLEMENT IT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 #to log something:
-logging.debug('this will be logged')
-logging.critical('this will be very importantly logged')
+#logging.debug('this will be logged')
+#logging.critical('this will be very importantly logged')
 #use different levels for different things:
 #DEBUG - debug message
 #INFO - info message
@@ -66,6 +64,23 @@ logging.critical('this will be very importantly logged')
 # END LOGGING SET UP ==========================================================
 
 # START FUNCTIONS =============================================================
+
+def resetdns():
+    os.system("ipconfig /release")
+    os.system("ipconfig /renew")
+    os.system("ipconfig /flushdns")
+
+def rdp(status):
+    if status:
+        os.system("reg add \"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\" /v fDenyTSConnections /t REG_DWORD /d 0 /f")
+    else:
+        os.system("reg add \"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\" /v fDenyTSConnections /t REG_DWORD /d 1 /f")
+
+def ra(status):
+    if status:
+        os.system("reg add \"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\" /v fAllowToGetHelp /t REG_DWORD /d 1 /f")
+    else:
+        os.system("reg add \"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\" /v fAllowToGetHelp /t REG_DWORD /d 0 /f")
 
 def telnet(status):
     if status:
@@ -95,6 +110,11 @@ def adminshares():
     os.system('net share C$ /DELETE')
     os.system('net share D$ /DELETE')
     # FIXME save settings after reboot
+
+def checkshell():
+    if str(cmdCall("echo %COMSPEC%")) == 'C:\\Windows\\system32\\cmd.exe':
+        return True
+    return False
 
 def closeport(port):
   print('Closing down port #' + port + '...')
@@ -163,11 +183,6 @@ def patchInstaller(dirOfPatches):
       if patches[patch] == -1:
         print('----' + patch)
 
-def disableFTPandSMTP():
-  print('Disabling FTP and SMTP...')
-  os.system('sysocmgr /i:%windir%\inf\sysoc.inf /u:'+os.getcwd()+'\comp.inf /r /q')
-  os.remove(os.getcwd()+'\comp.inf')
-
 def isNetworkConnected():
     pingout = cmdCall('ping 8.8.8.8 -c 1 -q -W 3')
     if '100% packet loss' in pingout:
@@ -180,14 +195,7 @@ def isNetworkConnected():
 def cmdCall(command):
     return unicode(os.popen(command).read())
 
-#stopTelnet()
-#enableFireWall()
-#deleteAdminShares()
-#downloadMaterial()
-
-# END FUNCTIONS ===============================================================
-
-# START ARGS ==================================================================
+# Beginning of arguments
 
 class silentArgParse(argparse.ArgumentParser):
 	#def error(self, m):
@@ -207,10 +215,10 @@ parser.add_argument('-dl', '--download',		metavar='tool', type=str, nargs='*', h
 parser.add_argument('-a', '--adminshares',		metavar='on/off', choices=['on', 'off'], type=str, nargs=1, help='enable or disable adminshares')
 parser.add_argument('-g', '--group-policy',		metavar='gpo script', type=str, nargs=1, help='modify group policy')
 parser.add_argument('-p', '--ports',			metavar='port', type=str, nargs='+', help='open or close firewall ports. This does not enable the firewall if it is not started')
-parser.add_argument('-n', '--null-sessions', 	metavar='on/off', choices=['on', 'off'], type=str, nargs=1, help='enable or disable null sessions')
-parser.add_argument('-vp', '--print-ports', 	metavar='port', type=str, nargs='+', help='output information about system ports')
+parser.add_argument('-n', '--null-sessions', 	        metavar='on/off', choices=['on', 'off'], type=str, nargs=1, help='enable or disable null sessions')
+parser.add_argument('-vp', '--print-ports', 	        metavar='port', type=str, nargs='+', help='output information about system ports')
 parser.add_argument('-fs', '--ftp-smtp',		metavar='on/off', choices=['on', 'off'], type=str, nargs=1, help='enable or disable FTP/SMTP')
-parser.add_argument('-ip', '--install-patches', metavar='file', type=str, nargs='*', help='install windows patches')
+parser.add_argument('-ip', '--install-patches',         metavar='file', type=str, nargs='*', help='install windows patches')
 parser.add_argument('-r', '--reboot',			help='reboots the system', action='store_true')
 args= parser.parse_args()
 
@@ -223,7 +231,13 @@ if len(sys.argv)<2:
 
 # Perform all recommended fixes
 if args.default:
-	# FIXME
+	nullsessions()
+        adminshares()
+        telnet(0)
+        firewall(0)
+        resetdns()
+        rdp(0)
+        ra(0)
 	pass
 
 # Print version info
@@ -242,8 +256,6 @@ if args.verbose:
 if args.quiet: 
     # FIXME
     pass
-
-# function options ===
 
 # Telnet
 if args.telnet:
@@ -271,23 +283,15 @@ if args.group_policy:
 
 # Firewall ports
 if args.ports: 
-	# FIXME
-	print args.ports.split(' ')
-	closeport(int(args.t[0]))
-	pass
+    print args.ports.split(' ')
+    closeport(int(args.t[0]))
 
 # Null sessions
 if args.null_sessions:
     nullsessions()
-    pass
 
 # Output system port info
 if args.print_ports: 
-	# FIXME
-    pass
-
-# FTP/SMTP
-if args.ftp_smtp: 
 	# FIXME
     pass
 
@@ -296,11 +300,6 @@ if args.install_patches:
 	# FIXME
     pass
 
-# Reboot the system
-# DO THIS LAST
+# Reboot the system (always last)
 if args.reboot or regReboot == True:
     reboot()
-# Reboot is checked at the very end of the code
-
-# END ARGS ====================================================================
-

@@ -1,15 +1,5 @@
 #!/usr/bin/env python
-import argparse
-import sys
-import string
-import time
-import re
-import os
-import urllib
-import zipfile
-import subprocess
-import logging
-import platform
+import argparse, logging, os, platform, re, string, subprocess, sys, time, urllib, zipfile
 
 VERSION = 0.1
 regReboot = False
@@ -98,7 +88,8 @@ def nullsessions():
     key = OpenKey(HKEY_LOCAL_MACHINE, keyVal, 0, KEY_ALL_ACCESS)
   except:
     key = CreateKey(HKEY_LOCAL_MACHINE, keyVal)
-  SetValueEx(key, "restrictanonymous", 0, REG_DWORD, 2)
+  SetValueEx(key, "RestrictAnonymous", 0, REG_DWORD, 2)
+  SetValueEx(key, "RestrictAnonymousSAM", 0, REG_DWORD, 1)
   CloseKey(key)
 
 def reboot():

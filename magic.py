@@ -1,15 +1,5 @@
 #!/usr/bin/env python
-import argparse
-import sys
-import string
-import time
-import re
-import os
-import urllib
-import zipfile
-import subprocess
-import logging
-import platform
+import argparse, logging, os, platform, re, string, subprocess, sys, time, urllib, zipfile
 
 VERSION = 0.1
 regReboot = False

@@ -132,10 +132,10 @@ def reboot():
   print('Now restarting the system...')
   os.system('shutdown /r /f /t 000')
 
-def downloadMaterial():
+def download():
     # FIXME Download latest, individual tools. only install if flag is given
-    print('Downloading and extr...')
-    urllib.urlretrieve("http://db.tt/TZnIqw0p", "Tools.zip")
+    print('Downloading and extracting installers...')
+    urllib.urlretrieve("http://db.tt/niDVOfmr", "Tools.zip")
     z = zipfile.ZipFile("Tools.zip")
     z.extractall()
 
@@ -229,20 +229,20 @@ if len(sys.argv)<2:
 
 # Perform all recommended fixes
 if args.default:
-	nullsessions()
-        adminshares()
-        telnet(0)
-        firewall(0)
-        resetdns()
-        rdp(0)
-        ra(0)
-	pass
+    nullsessions()
+    adminshares()
+    telnet(0)
+    firewall(0)
+    resetdns()
+    rdp(0)
+    ra(0)
+    download()
 
 # Print version info
 if args.version: 
     print "magic.py: version %s | Written by the TJCSCC" % (str(VERSION))
-    pass
-    
+    exit()
+
 # Shows verbose output
 # Prints everything to stdout, stdoutlog, and fulllog
 if args.verbose: 

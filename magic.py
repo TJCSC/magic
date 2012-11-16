@@ -197,6 +197,13 @@ parser.add_argument('-ip', '--install-patches',         metavar='file', type=str
 parser.add_argument('-r', '--reboot',			help='reboots the system', action='store_true')
 args= parser.parse_args()
 
+print vars(args)
+# Check for having no arguments, and if there are none, print help
+# later this might be changed to do some default operations
+if len(sys.argv)<2:
+	parser.print_help()
+	exit(0)
+
 # END READ ARGS =================================================================
 
 # START LOGGING SET UP ==========================================================
@@ -209,7 +216,7 @@ logging.basicConfig(level=logging.DEBUG,
 					filemode='w')
 
 # define a Handler which writes INFO messages or higher to an output file
-output = logging.FileHandler('magic-output.log')
+output = logging.FileHandler('magic-'+time.strftime("%Y-%m-%d,%H:%M:%S")+'-output.log')
 output.setLevel(logging.INFO)
 # set a format which is simpler for console use
 formatter = logging.Formatter('%(levelname)-8s %(message)s')
@@ -243,11 +250,6 @@ logging.getLogger('').addHandler(console)
 # END LOGGING SET UP ==========================================================
 
 # START PROCESS ARGS ==========================================================
-
-# Check for having no arguments, and if there are none, print help
-# later this might be changed to do some default operations
-if len(sys.argv)<2:
-	parser.print_help()
 
 # code options ===
 

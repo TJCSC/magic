@@ -9,6 +9,7 @@ import urllib
 import zipfile
 import subprocess
 import logging
+import platform
 
 VERSION = 0.1
 regReboot = False
@@ -51,15 +52,27 @@ def telnet(status):
         os.system("net stop tlntsvr")
 
 def firewall(status):
-    if status:
-        print('Enabling the Firewall...')
-        os.system('netsh firewall set opmode enable')
-        os.system('netsh firewall set service all disable all')
-        os.system('netsh firewall set service REMOTEDESKTOP enable all')
-        os.system('netsh firewall set service REMOTEADMIN enable all')
+    version = platform.version()
+    if float(version[:version.index('.', 2)]) >= 6:
+        if status:
+            print('Enabling the Firewall...')
+            os.system('netsh advfirewall set currentprofile state on')
+            os.system('netsh advfirewall set rule name=all profile=any new enable=no')
+            os.system('netsh advfirewall set rule group="remote desktop" profile=any new enable=yes')
+            os.system('netsh advfirewall set rule group="remote administration" profile=any new enable=yes')
+        else:
+            print('Disabling the Firewall...')
+            os.system('netsh advfirewall set currentprofile state off')
     else:
-        print('Disabling the Firewall...')
-        os.system('netsh firewall set opmode disable')
+        if status:
+            print('Enabling the Firewall...')
+            os.system('netsh firewall set opmode enable')
+            os.system('netsh firewall set service all disable all')
+            os.system('netsh firewall set service REMOTEDESKTOP enable all')
+            os.system('netsh firewall set service REMOTEADMIN enable all')
+        else:
+            print('Disabling the Firewall...')
+            os.system('netsh firewall set opmode disable')
 
 def adminshares():
     print('Deleting admisistrative shares...')

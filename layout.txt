@@ -1,0 +1,13 @@
+#proposed layout for the file
+
+imports and basic setup
+create logger
+functions
+readargs
+add args to queue
+process queue
+	help and version
+	logging
+	changing functions
+	listing functions
+	reboot

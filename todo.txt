@@ -21,6 +21,7 @@ use erunt to backup registry (has command line switches) - http://www.larshedere
 wmic product - uninstall software (!!!)
 pkgmgr - lets you install windows pagkages
 use xcopy/robocopy to copy files around
+set up Windows logging (Event Viewer, auditing of security events)
 
 SAIC stuff is in the pdf
 Use MBSA
